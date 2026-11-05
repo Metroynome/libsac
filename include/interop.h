@@ -43,7 +43,8 @@ typedef struct variableAddress {
 	/* 0x80 */ u32 HIGCredits; /* 32 */
 } VariableAddress_t;
 
-#define SAC_VA_COMPACT_MENU(address) ((u32)(address) | (u32)0x80000000)
+#define SAC_VA_COMPACT_BASE(address) ((u32)(address) | (u32)0x80000000)
+#define SAC_VA_COMPACT_CUSTOM_BASE(address) ((u32)(address) | (u32)0xc0000000)
 #define SAC_VA_COMPACT_OFFSET(base, address) ((address) == 0 ? 0 : \
 	(u16)(((s32)(address) - (s32)(base)) / 4 + 0x8000 + \
 	0 * sizeof(char[((address) == 0 || (((s32)(address) - (s32)(base)) % 4 == 0 && \
@@ -51,8 +52,8 @@ typedef struct variableAddress {
 	((s32)(address) - (s32)(base)) / 4 <= 32767)) ? 1 : -1])))
 
 typedef struct sacVariableAddressCompact {
-	/* 0x00 */ u32 MainMenu;
-	/* 0x04 */ u32 Level01Museum;
+	/* 0x00 */ u32 Level01Museum;
+	/* 0x04 */ u32 MainMenu;
 	/* 0x08 */ u16 Level01Timing;
 	/* 0x0a */ u16 Level01Prison;
 	/* 0x0c */ u16 Level02Skyscrapers;
@@ -84,8 +85,45 @@ typedef struct sacVariableAddressCompact {
 	/* 0x40 */ u16 Level10Boss;
 	/* 0x42 */ u16 HIGTreehouse;
 	/* 0x44 */ u16 HIGCredits;
-	/* 0x46: two bytes of alignment padding. */
+	/* 0x46: two bytes of EE alignment padding. */
 } sacVariableAddressCompact_t;
+
+typedef struct sacVariableAddressCompactBase {
+	/* 0x00 */ u32 Base;
+	/* 0x04 */ u32 MainMenu;
+	/* 0x08 */ u16 Level01Museum;
+	/* 0x0a */ u16 Level01Timing;
+	/* 0x0c */ u16 Level01Prison;
+	/* 0x0e */ u16 Level02Skyscrapers;
+	/* 0x10 */ u16 Level02Giant;
+	/* 0x12 */ u16 Reserved06;
+	/* 0x14 */ u16 Level03Countess;
+	/* 0x16 */ u16 Level03Snowboard;
+	/* 0x18 */ u16 Level03Cafeteria;
+	/* 0x1a */ u16 Level04Carnival;
+	/* 0x1c */ u16 Level04Gondola;
+	/* 0x1e */ u16 Reserved12;
+	/* 0x20 */ u16 Level05Casino;
+	/* 0x22 */ u16 Level05Yard;
+	/* 0x24 */ u16 Level05Highstakes;
+	/* 0x26 */ u16 Level06Lab;
+	/* 0x28 */ u16 Level06Race;
+	/* 0x2a */ u16 Level06Qwark;
+	/* 0x2c */ u16 Level07Foundry;
+	/* 0x2e */ u16 Level07Gadgebot;
+	/* 0x30 */ u16 Level07Shower;
+	/* 0x32 */ u16 Level08Graveyard;
+	/* 0x34 */ u16 Level08Qwark;
+	/* 0x36 */ u16 Level08GiantClank;
+	/* 0x38 */ u16 Level09Escapeyard;
+	/* 0x3a */ u16 Level09Damrace;
+	/* 0x3c */ u16 Level09Qwarkdam;
+	/* 0x3e */ u16 Level10Gadgebot;
+	/* 0x40 */ u16 Level10Base;
+	/* 0x42 */ u16 Level10Boss;
+	/* 0x44 */ u16 HIGTreehouse;
+	/* 0x46 */ u16 HIGCredits;
+} sacVariableAddressCompactBase_t;
 
 /* Caller supplies an identified, currently loaded SNR2 module and its verified
  * original REL size. tableLevel is the module-file slot (-1 also means FE).
