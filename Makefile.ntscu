@@ -1,0 +1,7 @@
+EE_REGION = ntscu
+EE_LIB_NAME = libsacntscu.a
+EE_DEFS = -DSAC_NTSCU -DNTSCU
+
+include $(CURDIR)/Makefile.defs
+include $(PS2SDK)/samples/Makefile.pref
+include $(CURDIR)/Makefile.eeglobal

@@ -1,0 +1,35 @@
+.DEFAULT_GOAL := all
+EE_SRC_DIR = src/
+EE_OBJS_DIR = obj/$(EE_REGION)/
+EE_LIB_DIR = lib/
+
+EE_INCS += -I./include -I$(EE_SRC_DIR)
+EE_LIB = $(EE_LIB_DIR)$(EE_LIB_NAME)
+EE_OBJS = interop.o
+EE_OBJS := $(addprefix $(EE_OBJS_DIR),$(EE_OBJS))
+EE_MAKEFILES = Makefile.defs Makefile.eeglobal Makefile.$(EE_REGION)
+
+.PHONY: all install clean
+all: $(EE_LIB)
+
+$(EE_OBJS_DIR)%.o: $(EE_SRC_DIR)%.c $(EE_MAKEFILES)
+	@mkdir -p $(@D)
+	$(EE_C_COMPILE) -MMD -MP -c $< -o $@
+
+$(EE_OBJS_DIR)%.o: $(EE_SRC_DIR)%.S $(EE_MAKEFILES)
+	@mkdir -p $(@D)
+	$(EE_C_COMPILE) -MMD -MP -c $< -o $@
+
+
+install: all
+	mkdir -p "$(DESTDIR)$(PS2SDK)/ports/include/libsac" "$(DESTDIR)$(PS2SDK)/ports/lib"
+	cp -f include/*.h "$(DESTDIR)$(PS2SDK)/ports/include/libsac/"
+	cp -f $(EE_LIB) "$(DESTDIR)$(PS2SDK)/ports/lib/"
+
+clean:
+	rm -rf $(EE_OBJS_DIR)
+	rm -f $(EE_LIB)
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(EE_OBJS:.o=.d)
+endif
